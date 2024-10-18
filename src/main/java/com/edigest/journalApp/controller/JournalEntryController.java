@@ -2,6 +2,8 @@ package com.edigest.journalApp.controller;
 
 import com.edigest.journalApp.entity.JournalEntry;
 import com.edigest.journalApp.entity.User;
+import com.edigest.journalApp.repository.JournalEntryRepository;
+import com.edigest.journalApp.repository.UserRepository;
 import com.edigest.journalApp.service.JournalEntryService;
 import com.edigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
@@ -24,6 +26,10 @@ public class JournalEntryController {
     private JournalEntryService journalEntryService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private JournalEntryRepository journalEntryRepository;
 
     @GetMapping
     public ResponseEntity<?> getJournals() {
@@ -71,14 +77,10 @@ public class JournalEntryController {
     public ResponseEntity<?> deleteEntryById(@PathVariable ObjectId myId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User userInDB = userService.findUserByUsername(username);
-        List<JournalEntry> collect = userInDB.getJournalEntries()
-                .stream().filter(x -> x.getId().equals(myId)).collect(Collectors.toList());
-        if (collect != null && !collect.isEmpty()) {
-            journalEntryService.deleteJournalEntryById(myId, username);
+        boolean removed = journalEntryService.deleteJournalEntryById(myId, username);
+        if(removed)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
