@@ -23,7 +23,7 @@ public class AdminController {
     @Autowired
     private JournalEntryService journalEntryService;
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
         List<User> allUsers = userService.getAllUser();
         if (allUsers != null && !allUsers.isEmpty()) {
@@ -31,20 +31,12 @@ public class AdminController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-   /* @GetMapping
+    @GetMapping("/journals")
     public ResponseEntity<?> getAllJournals() {
         List<JournalEntry> allJournalEntries = journalEntryService.getAllJournalEntries();
         if (allJournalEntries != null && !allJournalEntries.isEmpty()) {
             return new ResponseEntity<>(allJournalEntries, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }*/
-    /*@GetMapping
-    public ResponseEntity<?> getAllJournals() {
-        List<JournalEntry> allJournalEntries = journalEntryService.getAllJournalEntries();
-        if(allJournalEntries != null && !allJournalEntries.isEmpty()) {
-            return new ResponseEntity<>(allJournalEntries, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }*/
+    }
 }
