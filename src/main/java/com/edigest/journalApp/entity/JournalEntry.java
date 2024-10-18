@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+
 //POJO
 @Document(collection="journal_entries")
 @Data
@@ -18,6 +20,7 @@ public class JournalEntry {
     private String title;
     private String content;
     private LocalDateTime date;
+   // private List<JournalEntry> journalEntryList;
 
 
 }
