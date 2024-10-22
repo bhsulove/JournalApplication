@@ -4,6 +4,8 @@ import com.edigest.journalApp.entity.JournalEntry;
 import com.edigest.journalApp.entity.User;
 import com.edigest.journalApp.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +21,20 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
+    //private static final Logger logger = LoggerFactory.getLogger(JournalEntryService.class);
+
     @Transactional
     public void saveJournalEntry(JournalEntry journalEntry, String username) {
-        User user = userService.findUserByUsername(username);
-        journalEntry.setDate(LocalDateTime.now());
-        JournalEntry save = journalEntryRepository.save(journalEntry);
-        user.getJournalEntries().add(save);
-        userService.saveUser(user);
+        try {
+            User user = userService.findUserByUsername(username);
+            journalEntry.setDate(LocalDateTime.now());
+            JournalEntry save = journalEntryRepository.save(journalEntry);
+            user.getJournalEntries().add(save);
+            userService.saveUser(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while saving Journal "+e);
+        }
+
     }
 
     public void saveJournalEntry(JournalEntry journalEntry) {

@@ -11,29 +11,5 @@
 #  servlet:
 #    context-path: /journal
 
-spring:
-  profiles:
-    active: dev
-
-
-logging:
-  level:
-    com:
-      edigest:
-        journalApp: DEBUG
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
