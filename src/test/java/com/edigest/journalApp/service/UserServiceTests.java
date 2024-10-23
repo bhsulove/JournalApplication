@@ -19,20 +19,22 @@ public class UserServiceTests {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
-
+    @Disabled
     @BeforeAll
     static void beforeAll() {
         //Before all tests, this method is implemented.
     }
+    @Disabled
     @AfterAll
     static void afterAll() {
         //After all tests, this method is implemented.
     }
-
+    @Disabled
     @BeforeEach
     void beforeEach() {
         //Before every test method this method will be executed.
     }
+    @Disabled
     @AfterEach
     void afterEach() {
         //After every test method this method will be executed.

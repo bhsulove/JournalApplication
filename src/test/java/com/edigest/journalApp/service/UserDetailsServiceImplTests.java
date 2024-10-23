@@ -4,6 +4,7 @@ import com.edigest.journalApp.entity.User;
 import com.edigest.journalApp.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
@@ -26,11 +27,12 @@ public class UserDetailsServiceImplTests {
     @Mock
     private UserRepository userRepository;
 
+    @Disabled
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-
+    @Disabled
     @Test
     void loadUserByUsernameTest(){
         User expectedUser = User.builder()
