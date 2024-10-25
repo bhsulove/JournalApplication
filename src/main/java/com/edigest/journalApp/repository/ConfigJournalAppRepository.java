@@ -1,0 +1,11 @@
+package com.edigest.journalApp.repository;
+
+import com.edigest.journalApp.entity.ConfigJournalApp;
+import com.edigest.journalApp.entity.JournalEntry;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+//controller ---> service ---> repository
+public interface ConfigJournalAppRepository extends MongoRepository<ConfigJournalApp, ObjectId> {
+
+}

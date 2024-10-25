@@ -1,5 +1,6 @@
 package com.edigest.journalApp.controller;
 
+import com.edigest.journalApp.cache.AppCache;
 import com.edigest.journalApp.entity.JournalEntry;
 import com.edigest.journalApp.entity.User;
 import com.edigest.journalApp.service.JournalEntryService;
@@ -20,6 +21,8 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private JournalEntryService journalEntryService;
+    @Autowired
+    private AppCache appCache;
 
     @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers() {
@@ -40,11 +43,14 @@ public class AdminController {
     @PostMapping("/create-admin")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
-            //user.setPassword(passwordEncoder.encode(user.getPassword()));
             userService.saveNewAdmin(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
+    }
+    @GetMapping("/clear-app-cache")
+    public void clearAppCache(){
+        appCache.init();
     }
 }
