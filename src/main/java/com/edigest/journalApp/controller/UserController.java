@@ -1,9 +1,14 @@
 package com.edigest.journalApp.controller;
 
+import com.edigest.journalApp.api.response.QuoteResponse;
+import com.edigest.journalApp.api.response.WeatherResponse;
 import com.edigest.journalApp.entity.JournalEntry;
 import com.edigest.journalApp.entity.User;
 import com.edigest.journalApp.repository.UserRepository;
+import com.edigest.journalApp.service.QuoteService;
 import com.edigest.journalApp.service.UserService;
+import com.edigest.journalApp.service.WeatherService;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,6 +29,10 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private WeatherService weatherService;
+    @Autowired
+    private QuoteService quoteService;
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user) {
@@ -46,21 +55,31 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /*@GetMapping("id/{myId}")
-    public ResponseEntity<User> getEntryById(@PathVariable ObjectId myId) {
-        Optional<User> userEntryById = userService.getUserById(myId);
-        if(userEntryById.isPresent()){
-            return new ResponseEntity<>(userEntryById.get(), HttpStatus.OK);
+    @GetMapping("/weather")
+    public ResponseEntity<?> weather() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        log.info("Fetching weather for New York for user: {}", username);
+        WeatherResponse newYork = weatherService.getWeather("New York");
+        String greeting="";
+
+        if(newYork!=null){
+            greeting="Hi "+username+", Weather: "+newYork.getCurrent().getFeelslike();
+            return new ResponseEntity<>(greeting,HttpStatus.OK);
         }
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Hi "+username,HttpStatus.NOT_FOUND);
     }
-    @GetMapping("/{username}")
-    public ResponseEntity<User> getUserById(@PathVariable String username) {
-        User userByUsername = userService.findUserByUsername(username);
-        if (userByUsername!=null) {
-            return new ResponseEntity<>(userByUsername, HttpStatus.OK);
+
+    @GetMapping("/quotes")
+    public ResponseEntity<?> quotes(){
+        SecurityContextHolder.getContext().getAuthentication();
+        QuoteResponse quoteResponse = quoteService.getQuote("success");
+
+        if(quoteResponse!=null){
+           return new ResponseEntity<>(quoteResponse.getQuote(),HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }*/
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
 }
