@@ -2,7 +2,7 @@
 #spring:
 #  data:
 #    :mongodb:
-#      uri:mongodb+srv://bhsulove:j3SFcQRhH2qnPQSX@cluster0.tvkkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+#      uri:mongodb+srv:${MONGO_URI}
 #      database:journaldb
 #      auto-index-creation:true
 #
