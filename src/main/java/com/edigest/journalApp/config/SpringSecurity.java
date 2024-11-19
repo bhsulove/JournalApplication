@@ -1,5 +1,6 @@
 package com.edigest.journalApp.config;
 
+import com.edigest.journalApp.filter.JwtFilter;
 import com.edigest.journalApp.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -23,6 +25,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SpringSecurity{
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -30,15 +35,16 @@ public class SpringSecurity{
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
-                .httpBasic(withDefaults()) // Use basic authentication or configure as needed
+                //.httpBasic(withDefaults()) // Use basic authentication or configure as needed
                 .csrf(csrf -> csrf.disable()) // Ignore CSRF for registration
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(form -> form
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                /*.formLogin(form -> form
                         .loginPage("/login") // Specify your custom login page URL
                         .permitAll() // Allow all users to access the login page
                 )
                 .logout(logout -> logout.permitAll() // Allow all users to access logout
-                );
+                );*/
 
         return http.build();
     }
